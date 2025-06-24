@@ -1,6 +1,8 @@
 FROM python:3.11-slim
 
-RUN pip3 install requirements.txt && \
+COPY requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt && \
     groupadd -r demouser && useradd -r -g demouser demouser && \
     mkdir /src && \
     chown -R demouser:demouser /src
@@ -9,6 +11,10 @@ USER demouser
 
 WORKDIR /src
 
+COPY . .
+
+EXPOSE 5000
+
 ENV FLASK_APP=app.py REDIS_HOST=redis
 
-CMD ["flask", "run", "-h", "127.0.0.1"]
+CMD ["flask", "run", "-h", "0.0.0.0","-p", "5000"]
